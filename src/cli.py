@@ -52,6 +52,7 @@ def read(
 
 @cli.command("tasks")
 def show_tasks(
+    stdin: bool = typer.Option(False, "--stdin", help="Read messages from stdin"),
     jsonl: list[Path] = typer.Option(
         help="Read messages from JSONL file(s)",
         default_factory=list,
@@ -62,7 +63,7 @@ def show_tasks(
     priority: int = typer.Option(3, "--priority", min=1, max=5, help="Default priority"),
     only_ready: bool = typer.Option(False, "--ready", help="Show only ready tasks"),
 ):
-    raw_sources = _build_sources(stdin=False, jsonl=jsonl)
+    raw_sources = _build_sources(stdin, jsonl)
     inbox = InboxApp(raw_sources)
 
     tasks = list(inbox.iter_tasks(default_priority=priority))
